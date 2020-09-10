@@ -1,0 +1,10 @@
+camera_1: {frame: tf1, parent_frame: map}
+camera_2: {frame: tf2, parent_frame: map}
+cameras:
+  camera_1:
+    orientation: [1.3903664439709836e-09, 0.35999899195264035, 1.8999999814214126]
+    position: [2.200000047683716, -4.0, 2.200000047683716]
+  camera_2:
+    orientation: [0.0, 0.35, -1.2]
+    position: [-1.7, 3.1864, 2.2]
+

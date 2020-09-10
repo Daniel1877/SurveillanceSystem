@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Uncomment in case you use the correct hardware cameras -->
+
+<!--
+  <include file="$(find surveillance_system)/launch/openni2.launch">
+    <arg name = "camera" value = "camera1"/>
+    <arg name = "device_id" value = "#1"/>
+  </include>
+
+  <include file="$(find surveillance_system)/launch/openni2.launch">
+    <arg name = "camera" value = "camera2"/>
+    <arg name = "device_id" value = "#2"/>
+  </include>
+-->
+
+  <rosparam command="load" file="$(find surveillance_system)/camera.yaml" ns="cameras"/>
+
+  <node name="camera_1" pkg="surveillance_system" type="interactive_tf" ns="cameras" output="screen">
+    <param name="parent_frame" value="map"/>
+    <param name="frame" value="tf1"/>
+  </node>
+
+  <node name="camera_2" pkg="surveillance_system" type="interactive_tf" ns="cameras" output="screen">
+    <param name="parent_frame" value="map"/>
+    <param name="frame" value="tf2"/>
+  </node>
+
+  <group ns = "camera1">
+
+    <node name="record_1" pkg="surveillance_system" type="recorder" ns="recorders" output="screen">
+      <param name="camera" value="/camera1/rgb/image_raw"/>
+    </node>
+
+    <node name="diff_1" pkg="surveillance_system" type="difference" ns="differences" output="screen">
+      <remap from = "input" to = "/camera1/depth/points"/>
+      <param name="start" value="/camera1/recorders/start"/>
+      <param name="stop" value="/camera1/recorders/stop"/>
+    </node>
+
+  </group>
+
+  <group ns = "camera2">
+
+    <node name="diff_2" pkg="surveillance_system" type="difference" ns="differences" output="screen">
+      <remap from = "input" to = "/camera2/depth/points"/>
+      <param name="start" value="/camera2/recorders/start"/>
+      <param name="stop" value="/camera2/recorders/stop"/>
+    </node>
+
+    <node name="record_2" pkg="surveillance_system" type="recorder" ns="recorders" output="screen">
+      <param name="camera" value="/camera2/rgb/image_raw"/>
+    </node>
+
+  </group>
+
+
+  <node pkg="tf" type="static_transform_publisher" name="camera1_broadcaster"
+      args="0 0 0 3.14 0 -1.57 map camera1_link 100" />
+  <node pkg="tf" type="static_transform_publisher" name="camera2_broadcaster"
+      args="0 0 0 -3.14 0 -1.57 map camera2_link 100" />
+  <node name="rviz" pkg="rviz" type="rviz"
+      args="-d $(find surveillance_system)/config/interactive_tf.rviz"/>
+
+  <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"
+       args="--perspective-file $(find surveillance_system)/config/cameras.perspective"/>
+
+</launch>

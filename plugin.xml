@@ -1,0 +1,12 @@
+<library path="lib/libsurveillance_system">
+  <class name="surveillance_system/MyPlugin" type="surveillance_system::MyPlugin" base_class_type="rqt_gui_cpp::Plugin">
+    <description>
+      An example C++ GUI plugin to create a great user interface.
+    </description>
+    <qtgui>
+      <label>Plugin</label>
+      <icon type="theme">applications-other</icon>
+      <statustip>A Python GUI plugin.</statustip>
+    </qtgui>
+  </class>
+</library>

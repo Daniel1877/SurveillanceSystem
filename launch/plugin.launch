@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<launch>
+
+  <!-- Uncomment in case you use the correct hardware cameras -->
+
+<!--
+  <include file="$(find surveillance_system)/launch/openni2.launch">
+    <arg name = "camera" value = "camera1"/>
+    <arg name = "device_id" value = "#1"/>
+  </include>
+
+  <include file="$(find surveillance_system)/launch/openni2.launch">
+    <arg name = "camera" value = "camera2"/>
+    <arg name = "device_id" value = "#2"/>
+  </include>
+-->
+
+<!-- It executes de plugin individually, nevertheless it's incorporated in the rqt_gui interface -->
+
+  <!-- <node name="plugin" pkg="surveillance_system" type="exec_plug" output="screen"/> -->
+
+  <group ns = "camera1">
+
+    <node name="record_1" pkg="surveillance_system" type="recorderPlugin" ns="recorders" output="screen">
+      <param name="camera" value="/camera1/rgb/image_raw"/>
+    </node>
+
+    <node name="diff_1" pkg="surveillance_system" type="differencePlugin" ns="differences" output="screen">
+      <remap from = "input" to = "/camera1/depth/points"/>
+    </node>
+
+  </group>
+
+  <group ns = "camera2">
+
+    <node name="record_2" pkg="surveillance_system" type="recorderPlugin" ns="recorders" output="screen">
+      <param name="camera" value="/camera2/rgb/image_raw"/>
+    </node>
+
+    <node name="diff_2" pkg="surveillance_system" type="differencePlugin" ns="differences" output="screen">
+      <remap from = "input" to = "/camera2/depth/points"/>
+    </node>
+
+  </group>
+
+  <node name="rqt_gui" pkg="rqt_gui" type="rqt_gui"
+       args="--perspective-file $(find surveillance_system)/config/SurveillanceSystem.perspective"/>
+
+</launch>
